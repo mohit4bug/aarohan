@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum UserType {
+  INSIDER
+  OUTSIDER
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String?
+  email         String    @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  role          UserRole  @default(USER)
+  type          UserType  @default(INSIDER)
+
+  registrationsAsBoss         Registration[] @relation("BOSS_REGISTRATIONS")
+  registrationsAsParticipants Registration[] @relation("PARTICIPANT_REGISTRATIONS")
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Event {
+  id              String   @id @default(uuid())
+  name            String
+  description     String
+  isGroup         Boolean  @default(false)
+  minParticipants Int      @default(1)
+  maxParticipants Int      @default(1)
+  amount          Float
+  reward          Float
+  categories      String[]
+
+  registrations Registration[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Registration {
+  id      String @id @default(uuid())
+  bossId  String
+  eventId String
+
+  hasPaid Boolean @default(false)
+
+  boss  User  @relation(name: "BOSS_REGISTRATIONS", fields: [bossId], references: [id])
+  event Event @relation(fields: [eventId], references: [id])
+
+  participants User[] @relation("PARTICIPANT_REGISTRATIONS")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
