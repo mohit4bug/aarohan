@@ -1,11 +1,14 @@
 import "@/styles/globals.css"
 
 import { Toaster } from "@/components/ui/sonner"
+import { siteConfig } from "@/config/site.config"
 import { fontSans } from "@/lib/fonts"
 import { NextAuthProvider } from "@/providers/next-auth"
 import { NextNProgressProvider } from "@/providers/next-nprogress-bar"
 import { TanstackQueryProvider } from "@/providers/tanstack-query"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+
+export const metadata = siteConfig.metadata
 
 export default function RootLayout({
   children,
