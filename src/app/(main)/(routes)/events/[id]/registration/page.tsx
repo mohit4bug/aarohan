@@ -174,7 +174,7 @@ export default function RegistrationPage() {
     isMounted &&
     eventQuery.data && (
       <main className="h-full px-4 xl:px-0">
-        {Boolean(eventQuery.data?.event.registrations.length) && (
+        {Boolean(eventQuery.data.event.registrations.length) && (
           <div className="max-w-6xl mx-auto py-4 xl:py-6">
             <Alert variant="success" className="bg-success/10">
               <CheckCircleIcon className="h-4 w-4" />
@@ -232,7 +232,10 @@ export default function RegistrationPage() {
                             <FormLabel>{customField.field.name}</FormLabel>
                             <Select
                               onValueChange={field.onChange}
-                              defaultValue={field.value}>
+                              defaultValue={field.value}
+                              disabled={Boolean(
+                                eventQuery.data.event.registrations.length
+                              )}>
                               <FormControl>
                                 <SelectTrigger>
                                   <SelectValue
@@ -272,6 +275,9 @@ export default function RegistrationPage() {
                                 placeholder={
                                   customField.field.placeholder ?? ""
                                 }
+                                disabled={Boolean(
+                                  eventQuery.data.event.registrations.length
+                                )}
                                 {...field}
                               />
                             </FormControl>
@@ -286,7 +292,10 @@ export default function RegistrationPage() {
                 })}
                 <Button
                   className="w-full"
-                  disabled={registrationMutation.isPending}>
+                  disabled={
+                    registrationMutation.isPending ||
+                    Boolean(eventQuery.data.event.registrations.length)
+                  }>
                   {registrationMutation.isPending && (
                     <Loader2Icon className="w-4 h-5 animate-spin mr-2" />
                   )}
