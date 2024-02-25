@@ -5,6 +5,7 @@ import { fontSans } from "@/lib/fonts"
 import { NextAuthProvider } from "@/providers/next-auth"
 import { NextNProgressProvider } from "@/providers/next-nprogress-bar"
 import { TanstackQueryProvider } from "@/providers/tanstack-query"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export default function RootLayout({
   children,
@@ -18,6 +19,7 @@ export default function RootLayout({
           <TanstackQueryProvider>
             <NextAuthProvider>
               {children}
+              <SpeedInsights />
               <Toaster position="top-right" richColors />
             </NextAuthProvider>
           </TanstackQueryProvider>
