@@ -14,12 +14,12 @@ export const Navbar = () => {
       <div className="h-full max-w-6xl mx-auto items-center flex justify-between">
         <nav className="ml-auto gap-x-8 flex">
           <p
-            className="text-sm font-medium hover:underline cursor-pointer"
+            className="text-sm font-medium cursor-pointer bg-gradient-to-r from-fuchsia-700 to-pink-700 bg-clip-text text-transparent"
             onClick={handleClick.bind(null, "/events")}>
             Events
           </p>
           <p
-            className="text-sm font-medium hover:underline cursor-pointer"
+            className="text-sm font-medium cursor-pointer"
             onClick={handleClick.bind(null, "/dashboard")}>
             Dashboard
           </p>
