@@ -52,14 +52,14 @@ const schema = y.object({
     y.object({
       uid: y.string(),
       email: y.string().email(),
-    })
+    }),
   ),
   eventId: y.string(),
   fields: y.array(
     y.object({
       name: y.string(),
       value: y.string().required("Required"),
-    })
+    }),
   ),
 })
 
@@ -122,7 +122,7 @@ export default function RegistrationPage() {
           participants.fields.length < eventQuery.data.event.minParticipants
         ) {
           toast.error(
-            `Please add at least ${eventQuery.data.event.minParticipants} participants.`
+            `Please add at least ${eventQuery.data.event.minParticipants} participants.`,
           )
           return
         }
@@ -130,7 +130,7 @@ export default function RegistrationPage() {
           participants.fields.length > eventQuery.data.event.maxParticipants
         ) {
           toast.error(
-            `You can add at most ${eventQuery.data.event.maxParticipants} participants.`
+            `You can add at most ${eventQuery.data.event.maxParticipants} participants.`,
           )
           return
         }
@@ -248,7 +248,7 @@ export default function RegistrationPage() {
                               onValueChange={field.onChange}
                               defaultValue={field.value}
                               disabled={Boolean(
-                                eventQuery.data.event.registrations.length
+                                eventQuery.data.event.registrations.length,
                               )}>
                               <FormControl>
                                 <SelectTrigger>
@@ -266,7 +266,7 @@ export default function RegistrationPage() {
                                       value={option.value}>
                                       {option.label}
                                     </SelectItem>
-                                  )
+                                  ),
                                 )}
                               </SelectContent>
                             </Select>
@@ -290,7 +290,7 @@ export default function RegistrationPage() {
                                   customField.field.placeholder ?? ""
                                 }
                                 disabled={Boolean(
-                                  eventQuery.data.event.registrations.length
+                                  eventQuery.data.event.registrations.length,
                                 )}
                                 {...field}
                               />

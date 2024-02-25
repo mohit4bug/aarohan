@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
         {
           error: "Email is required",
         },
-        { status: 400 }
+        { status: 400 },
       )
     }
 
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
         {
           error: "User not found",
         },
-        { status: 404 }
+        { status: 404 },
       )
     }
 
@@ -34,14 +34,14 @@ export async function GET(request: NextRequest) {
       {
         user,
       },
-      { status: 200 }
+      { status: 200 },
     )
   } catch (error) {
     return Response.json(
       {
         error: "Something went wrong!",
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

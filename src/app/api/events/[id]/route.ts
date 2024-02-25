@@ -3,7 +3,7 @@ import { auth } from "@/auth"
 
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const session = await auth()
@@ -32,14 +32,14 @@ export async function GET(
         event,
         message: "Event fetched successfully!",
       },
-      { status: 200 }
+      { status: 200 },
     )
   } catch (error) {
     return Response.json(
       {
         error: "Something went wrong!",
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

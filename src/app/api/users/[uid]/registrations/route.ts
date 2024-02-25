@@ -3,7 +3,7 @@ import { db } from "@/lib/prisma"
 
 export async function GET(
   _request: Request,
-  { params }: { params: { uid: string } }
+  { params }: { params: { uid: string } },
 ) {
   try {
     const session = await auth()
@@ -18,7 +18,7 @@ export async function GET(
         {
           error: "Unauthorized!",
         },
-        { status: 401 }
+        { status: 401 },
       )
     }
 
@@ -56,7 +56,7 @@ export async function GET(
       {
         error: "Something went wrong!",
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

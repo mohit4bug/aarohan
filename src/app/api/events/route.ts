@@ -9,14 +9,14 @@ export async function GET(_request: Request) {
         events,
         message: "Events fetched successfully!",
       },
-      { status: 200 }
+      { status: 200 },
     )
   } catch (error) {
     return Response.json(
       {
         error: "Something went wrong!",
       },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }
