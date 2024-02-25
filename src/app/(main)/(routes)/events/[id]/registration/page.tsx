@@ -52,7 +52,7 @@ const schema = y.object({
   fields: y.array(
     y.object({
       name: y.string(),
-      value: y.string(),
+      value: y.string().required("Required"),
     })
   ),
 })
@@ -63,6 +63,7 @@ export default function RegistrationPage() {
 
   const form = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {},
   })
 
   useEffect(() => {
@@ -80,6 +81,26 @@ export default function RegistrationPage() {
     participants.remove(index)
   }
 
+  const onSubmit = form.handleSubmit((data) => {
+    /* Participants check */
+    if (eventQuery.data) {
+      if (participants.fields.length < eventQuery.data.event.minParticipants) {
+        toast.error(
+          `Please add at least ${eventQuery.data.event.minParticipants} participants.`
+        )
+        return
+      }
+      if (participants.fields.length > eventQuery.data.event.maxParticipants) {
+        toast.error(
+          `You can add at most ${eventQuery.data.event.maxParticipants} participants.`
+        )
+        return
+      }
+    }
+
+    /* Transform participants arr */
+  })
+
   const onSearch = (user: User) => {
     if (data && data.user.email === user.email) {
       toast.error("You are a team boss.")
@@ -94,8 +115,6 @@ export default function RegistrationPage() {
       email: user.email,
     })
   }
-
-  const onSubmit = form.handleSubmit((data) => {})
 
   const eventQuery = useQuery<
     ApiResponse<
@@ -112,8 +131,6 @@ export default function RegistrationPage() {
       return res.data
     },
   })
-
-  console.log(eventQuery.data?.event.eventFields[0].field)
 
   return (
     eventQuery.data && (
@@ -149,8 +166,11 @@ export default function RegistrationPage() {
               ))}
             </div>
             <Form {...form}>
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={onSubmit}>
                 {eventQuery.data.event.eventFields.map((customField, index) => {
+                  /* Fields */
+                  form.setValue(`fields.${index}.name`, customField.field.value)
+
                   if (customField.field.type === "SELECT") {
                     return (
                       <FormField
@@ -214,6 +234,7 @@ export default function RegistrationPage() {
                       />
                     )
                 })}
+                <Button className="w-full">Register</Button>
               </form>
             </Form>
           </div>
