@@ -37,6 +37,7 @@ async function main() {
       name: "Experience",
       value: "experience",
       type: "SELECT",
+      placeholder: "Select your experience level",
       options: [
         {
           label: "Beginner",
