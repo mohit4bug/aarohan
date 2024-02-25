@@ -8,7 +8,6 @@ import {
 import { Event } from "@prisma/client"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
-import { Skeleton } from "@/components/ui/skeleton"
 
 export const EventCard = (props: Event) => {
   const router = useRouter()
