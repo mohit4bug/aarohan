@@ -9,15 +9,15 @@ export const POST = auth(async (req) => {
     const eventId = body.eventId
     const participants = body.participants
 
-    type Participants = {
+    type Participant = {
       uid: string
       email: string
     }
 
     const modifiedParticipants = participants.map(
-      (participants: Participants) => {
-        return participants.uid
-      },
+      (participant: Participant) => {
+        return { id: participant.uid }
+      }
     )
 
     const event = await db.event.findUnique({
@@ -31,7 +31,7 @@ export const POST = auth(async (req) => {
         {
           error: "Event not found!",
         },
-        { status: 404 },
+        { status: 404 }
       )
     }
 
@@ -45,7 +45,7 @@ export const POST = auth(async (req) => {
           {
             error: "Invalid number of participants!",
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
     } else {
@@ -54,7 +54,7 @@ export const POST = auth(async (req) => {
           {
             error: "Invalid number of participants!",
           },
-          { status: 400 },
+          { status: 400 }
         )
       }
     }
@@ -64,9 +64,7 @@ export const POST = auth(async (req) => {
         bossId: user.id!,
         eventId: eventId,
         participants: {
-          connect: modifiedParticipants.map((id: string) => {
-            return { id }
-          }),
+          connect: modifiedParticipants,
         },
       },
     })
@@ -76,7 +74,7 @@ export const POST = auth(async (req) => {
         registration,
         message: "Registration successful!",
       },
-      { status: 201 },
+      { status: 201 }
     )
   } catch (error) {
     console.error(error)
@@ -84,7 +82,7 @@ export const POST = auth(async (req) => {
       {
         error: "Something went wrong!",
       },
-      { status: 500 },
+      { status: 500 }
     )
   }
 })
