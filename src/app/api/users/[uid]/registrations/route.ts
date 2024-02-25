@@ -3,17 +3,17 @@ import { db } from "@/lib/prisma"
 
 export async function GET(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { uid: string } }
 ) {
   try {
     const session = await auth()
     const { user } = session!
 
-    const id = params.id
+    const uid = params.uid
 
     const isAdmin = user.role === "ADMIN"
 
-    if (!isAdmin && user.id !== id) {
+    if (!isAdmin && user.id !== uid) {
       return Response.json(
         {
           error: "Unauthorized!",
@@ -24,7 +24,7 @@ export async function GET(
 
     const registrationsAsBoss = await db.registration.findMany({
       where: {
-        bossId: id,
+        bossId: uid,
       },
     })
 
@@ -32,7 +32,7 @@ export async function GET(
       where: {
         participants: {
           some: {
-            id,
+            id: uid,
           },
         },
       },
