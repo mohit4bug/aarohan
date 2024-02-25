@@ -111,17 +111,23 @@ export default function RegistrationPage() {
   const onSubmit = form.handleSubmit((data) => {
     /* Participants check */
     if (eventQuery.data) {
-      if (participants.fields.length < eventQuery.data.event.minParticipants) {
-        toast.error(
-          `Please add at least ${eventQuery.data.event.minParticipants} participants.`
-        )
-        return
-      }
-      if (participants.fields.length > eventQuery.data.event.maxParticipants) {
-        toast.error(
-          `You can add at most ${eventQuery.data.event.maxParticipants} participants.`
-        )
-        return
+      if (eventQuery.data.event.isGroup) {
+        if (
+          participants.fields.length < eventQuery.data.event.minParticipants
+        ) {
+          toast.error(
+            `Please add at least ${eventQuery.data.event.minParticipants} participants.`
+          )
+          return
+        }
+        if (
+          participants.fields.length > eventQuery.data.event.maxParticipants
+        ) {
+          toast.error(
+            `You can add at most ${eventQuery.data.event.maxParticipants} participants.`
+          )
+          return
+        }
       }
     }
     registrationMutation.mutate(data)
@@ -203,7 +209,9 @@ export default function RegistrationPage() {
             </div>
           </div>
           <div className="flex-[1] space-y-4">
-            <MemberSearchForm onSearch={onSearch} />
+            {eventQuery.data.event.isGroup && (
+              <MemberSearchForm onSearch={onSearch} />
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {participants.fields.map((item, index) => (
                 <Button
@@ -281,9 +289,6 @@ export default function RegistrationPage() {
                                 {...field}
                               />
                             </FormControl>
-                            <FormDescription>
-                              This is your public display name.
-                            </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
