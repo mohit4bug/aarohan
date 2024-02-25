@@ -30,7 +30,7 @@ export default function DashboardPage() {
     queryKey: ["@USER_REGISTRATIONS", session?.user.id],
     async queryFn() {
       const res = await makeRequest.get(
-        `/users/${session?.user.id}/registrations`,
+        `/users/${session?.user.id}/registrations`
       )
       return res.data
     },
@@ -45,13 +45,13 @@ export default function DashboardPage() {
           registrationsQuery.data.registrations.registrationsAsBoss.map(
             (registration) => (
               <RegistrationCard key={registration.id} {...registration} />
-            ),
+            )
           )}
         {registrationsQuery.data &&
           registrationsQuery.data.registrations.registrationsAsParticipant.map(
             (registration) => (
               <RegistrationCard key={registration.id} {...registration} />
-            ),
+            )
           )}
       </div>
     </main>
