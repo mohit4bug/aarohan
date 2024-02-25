@@ -2,6 +2,7 @@
 
 import { useTailwindConfig } from "@/hooks/useTailwindConfig"
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar"
+import { Suspense } from "react"
 
 export function NextNProgressProvider({
   children,
@@ -12,12 +13,14 @@ export function NextNProgressProvider({
 
   return (
     <>
-      <ProgressBar
-        height="4px"
-        options={{ showSpinner: false }}
-        shallowRouting
-        color={theme.colors.primary.DEFAULT}
-      />
+      <Suspense>
+        <ProgressBar
+          height="4px"
+          options={{ showSpinner: false }}
+          shallowRouting
+          color={theme.colors.primary.DEFAULT}
+        />
+      </Suspense>
       {children}
     </>
   )
