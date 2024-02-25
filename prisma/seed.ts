@@ -14,7 +14,7 @@ async function main() {
       reward: 6000,
       categories: ["Go", "Programming"],
       poster:
-        "https://media.licdn.com/dms/image/D4E12AQExtNE6b8J9_w/article-cover_image-shrink_720_1280/0/1681854911047?e=2147483647&v=beta&t=qmN4QsskpmPeb4wmjlvHEV4XAGHIklQmNNMYocxi5wg",
+        "https://granulate.io/wp-content/uploads/2021/02/Golang-Performance-510x300-1.png",
     },
   })
 
