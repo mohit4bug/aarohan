@@ -16,7 +16,7 @@ export default function RootLayout({
         <TanstackQueryProvider>
           <NextAuthProvider>
             {children}
-            <Toaster position="top-right" />
+            <Toaster position="top-right" richColors />
           </NextAuthProvider>
         </TanstackQueryProvider>
       </body>

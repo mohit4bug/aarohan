@@ -22,8 +22,9 @@ import {
 import { makeRequest } from "@/lib/axios"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Event, Field, User } from "@prisma/client"
-import { useQuery } from "@tanstack/react-query"
-import { X } from "lucide-react"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { AxiosError } from "axios"
+import { Loader2Icon, X } from "lucide-react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { useParams } from "next/navigation"
@@ -34,6 +35,10 @@ import * as y from "yup"
 
 type ApiResponse<T> = {
   [key: string]: T
+}
+
+type ApiError = {
+  error: string
 }
 
 type SelectOption = {
@@ -81,6 +86,27 @@ export default function RegistrationPage() {
     participants.remove(index)
   }
 
+  /* Registration */
+  const registrationMutation = useMutation({
+    mutationKey: ["@REGISTRATION"],
+    async mutationFn(values: y.InferType<typeof schema>) {
+      const res = await makeRequest.post("/registrations", values)
+      return res.data
+    },
+    onSuccess(data) {
+      toast.success(data.message)
+      form.reset({
+        eventId: String(),
+        fields: [],
+        participants: [],
+      })
+    },
+    onError(error: AxiosError<ApiError>) {
+      toast.error(error.response?.data.error)
+    },
+  })
+
+  /* Handling submit */
   const onSubmit = form.handleSubmit((data) => {
     /* Participants check */
     if (eventQuery.data) {
@@ -97,10 +123,10 @@ export default function RegistrationPage() {
         return
       }
     }
-
-    /* Transform participants arr */
+    registrationMutation.mutate(data)
   })
 
+  /* Searching in child component */
   const onSearch = (user: User) => {
     if (data && data.user.email === user.email) {
       toast.error("You are a team boss.")
@@ -234,7 +260,14 @@ export default function RegistrationPage() {
                       />
                     )
                 })}
-                <Button className="w-full">Register</Button>
+                <Button
+                  className="w-full"
+                  disabled={registrationMutation.isPending}>
+                  {registrationMutation.isPending && (
+                    <Loader2Icon className="w-4 h-5 animate-spin mr-2" />
+                  )}
+                  Register
+                </Button>
               </form>
             </Form>
           </div>

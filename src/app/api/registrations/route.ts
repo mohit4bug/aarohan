@@ -9,6 +9,17 @@ export const POST = auth(async (req) => {
     const eventId = body.eventId
     const participants = body.participants
 
+    type Participants = {
+      uid: string
+      email: string
+    }
+
+    const modifiedParticipants = participants.map(
+      (participants: Participants) => {
+        return participants.uid
+      }
+    )
+
     const event = await db.event.findUnique({
       where: {
         id: eventId,
@@ -53,9 +64,9 @@ export const POST = auth(async (req) => {
         bossId: user.id!,
         eventId: eventId,
         participants: {
-          connect: participants.map(({ id }: { id: string }) => ({
-            id,
-          })),
+          connect: modifiedParticipants.map((id: string) => {
+            return { id }
+          }),
         },
       },
     })
@@ -68,6 +79,7 @@ export const POST = auth(async (req) => {
       { status: 201 }
     )
   } catch (error) {
+    console.error(error)
     return Response.json(
       {
         error: "Something went wrong!",
