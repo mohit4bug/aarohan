@@ -61,6 +61,7 @@ model Event {
   amount          Float
   reward          Float
   categories      String[]
+  poster          String
 
   registrations Registration[]
 
