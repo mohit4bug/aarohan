@@ -26,6 +26,9 @@ export async function GET(
       where: {
         bossId: uid,
       },
+      include: {
+        event: true,
+      },
     })
 
     const registrationsAsParticipant = await db.registration.findMany({
@@ -35,6 +38,9 @@ export async function GET(
             id: uid,
           },
         },
+      },
+      include: {
+        event: true,
       },
     })
 
