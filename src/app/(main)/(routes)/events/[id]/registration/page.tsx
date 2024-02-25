@@ -23,7 +23,7 @@ import {
 import { makeRequest } from "@/lib/axios"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Event, Field, Registration, User } from "@prisma/client"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { AxiosError } from "axios"
 import { CheckCircleIcon, Loader2Icon, X } from "lucide-react"
 import { useSession } from "next-auth/react"
@@ -87,6 +87,7 @@ export default function RegistrationPage() {
     participants.remove(index)
   }
 
+  const queryClient = useQueryClient()
   /* Registration */
   const registrationMutation = useMutation({
     mutationKey: ["@REGISTRATION"],
@@ -104,6 +105,11 @@ export default function RegistrationPage() {
     },
     onError(error: AxiosError<ApiError>) {
       toast.error(error.response?.data.error)
+    },
+    onSettled() {
+      queryClient.invalidateQueries({
+        queryKey: ["@EVENT", params.id],
+      })
     },
   })
 
