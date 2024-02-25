@@ -17,7 +17,7 @@ import { useState } from "react"
 export const RegistrationCard = (
   props: Registration & {
     event: Event
-  },
+  }
 ) => {
   const [isCopied, setIsCopied] = useState(false)
 

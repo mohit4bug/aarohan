@@ -2,10 +2,18 @@
 
 import { AdminEventCard } from "@/components/admin-event-card"
 import { FieldCard } from "@/components/field-card"
+import { Button } from "@/components/ui/button"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { makeRequest } from "@/lib/axios"
 import { Event, Field } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
+import {
+  CheckIcon,
+  CopyIcon,
+  ListIcon,
+  TextCursorInputIcon,
+} from "lucide-react"
+import { useState } from "react"
 
 type ApiResponse<T> = {
   [key: string]: T
@@ -28,6 +36,23 @@ export default function AdminPage() {
     },
   })
 
+  const [isCopied, setIsCopied] = useState<boolean[]>([false, false])
+
+  const onCopy = (text: string, index: number) => {
+    navigator.clipboard.writeText(text)
+    setIsCopied((prev) => {
+      prev[index] = true
+      return [...prev]
+    })
+
+    return setTimeout(() => {
+      setIsCopied((prev) => {
+        prev[index] = false
+        return [...prev]
+      })
+    }, 2000)
+  }
+
   return (
     <main className="h-full px-4 xl:px-0">
       <div className="max-w-6xl mx-auto py-4 xl:py-6 gap-4 space-y-8">
@@ -36,8 +61,20 @@ export default function AdminPage() {
           {fieldsQuery.data && (
             <ScrollArea className="whitespace-nowrap w-full bg-card">
               <div className="flex w-max space-x-4">
-                {fieldsQuery.data.fields.map((field) => (
-                  <FieldCard key={field.id} {...field} />
+                {fieldsQuery.data.fields.map((field, index) => (
+                  <div key={field.id} className="flex items-center gap-x-2">
+                    <FieldCard {...field} />
+                    <Button
+                      size="mini"
+                      variant="ghost"
+                      onClick={onCopy.bind(null, field.id, index)}>
+                      {isCopied[index] ? (
+                        <CheckIcon className="w-4 h-4" />
+                      ) : (
+                        <CopyIcon className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
                 ))}
               </div>
               <ScrollBar orientation="horizontal" />
@@ -48,7 +85,7 @@ export default function AdminPage() {
           <h3 className="text-2xl font-semibold tracking-tight">Events</h3>
           {eventsQuery.data && (
             <ScrollArea className="whitespace-nowrap w-full">
-              <div className="flex w-max space-x-4">
+              <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {eventsQuery.data.events.map((event) => (
                   <AdminEventCard key={event.id} {...event} />
                 ))}

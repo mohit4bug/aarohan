@@ -114,4 +114,9 @@ model EventField {
 
   event Event @relation(fields: [eventId], references: [id])
   field Field @relation(fields: [fieldId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([eventId, fieldId])
 }

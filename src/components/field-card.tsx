@@ -4,17 +4,17 @@ import { ListIcon, TextCursorInputIcon } from "lucide-react"
 
 export const FieldCard = (field: Field) => {
   return (
-    <Button variant="outline">
+    <Button variant="outline" className="justify-start gap-x-4">
       {field.name}
       {field.type === "SELECT" ? (
-        <div className="flex items-center">
-          <ListIcon className="w-4 h-4 ml-4" />
+        <div className="flex items-center ml-auto">
+          <ListIcon className="w-4 h-4" />
           <span className="text-muted-foreground ml-2">
             ({field.options.length})
           </span>
         </div>
       ) : (
-        <TextCursorInputIcon className="w-4 h-4 ml-4" />
+        <TextCursorInputIcon className="w-4 h-4 ml-auto" />
       )}
     </Button>
   )
