@@ -1,6 +1,7 @@
 "use client"
 
 import { MemberSearchForm } from "@/components/member-search-form"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -24,7 +25,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { Event, Field, User } from "@prisma/client"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { AxiosError } from "axios"
-import { Loader2Icon, X } from "lucide-react"
+import { CheckCircleIcon, Loader2Icon, X } from "lucide-react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { useParams } from "next/navigation"
@@ -161,7 +162,16 @@ export default function RegistrationPage() {
   return (
     eventQuery.data && (
       <main className="h-full px-4 xl:px-0">
-        <div className="max-w-6xl mx-auto h-full flex flex-col lg:flex-row py-4 xl:py-6 gap-4">
+        <div className="max-w-6xl mx-auto py-4 xl:py-6">
+          <Alert variant="success" className="bg-success/10">
+            <CheckCircleIcon className="h-4 w-4" />
+            <AlertTitle>Woah!</AlertTitle>
+            <AlertDescription>
+              Looks like you are already registered for this event.
+            </AlertDescription>
+          </Alert>
+        </div>
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row py-4 xl:py-6 gap-4">
           <div className="flex-[1] space-y-4">
             <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
               {eventQuery.data.event.name}
