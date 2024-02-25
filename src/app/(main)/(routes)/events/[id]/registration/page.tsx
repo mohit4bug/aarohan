@@ -22,14 +22,14 @@ import {
 } from "@/components/ui/select"
 import { makeRequest } from "@/lib/axios"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Event, Field, User } from "@prisma/client"
+import { Event, Field, Registration, User } from "@prisma/client"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { AxiosError } from "axios"
 import { CheckCircleIcon, Loader2Icon, X } from "lucide-react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { useParams } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as y from "yup"
@@ -149,6 +149,7 @@ export default function RegistrationPage() {
         eventFields: Array<{
           field: Field
         }>
+        registrations: Array<Registration>
       }
     >
   >({
@@ -159,18 +160,31 @@ export default function RegistrationPage() {
     },
   })
 
+  /* Next.js specific */
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+    return () => {
+      setIsMounted(false)
+    }
+  }, [])
+
   return (
+    isMounted &&
     eventQuery.data && (
       <main className="h-full px-4 xl:px-0">
-        <div className="max-w-6xl mx-auto py-4 xl:py-6">
-          <Alert variant="success" className="bg-success/10">
-            <CheckCircleIcon className="h-4 w-4" />
-            <AlertTitle>Woah!</AlertTitle>
-            <AlertDescription>
-              Looks like you are already registered for this event.
-            </AlertDescription>
-          </Alert>
-        </div>
+        {Boolean(eventQuery.data?.event.registrations.length) && (
+          <div className="max-w-6xl mx-auto py-4 xl:py-6">
+            <Alert variant="success" className="bg-success/10">
+              <CheckCircleIcon className="h-4 w-4" />
+              <AlertTitle>Woah!</AlertTitle>
+              <AlertDescription>
+                Looks like you are already registered for this event.
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row py-4 xl:py-6 gap-4">
           <div className="flex-[1] space-y-4">
             <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
