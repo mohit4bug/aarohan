@@ -9,6 +9,13 @@ export async function GET(
       where: {
         id: params.id,
       },
+      include: {
+        eventFields: {
+          select: {
+            field: true,
+          },
+        },
+      },
     })
 
     return Response.json(

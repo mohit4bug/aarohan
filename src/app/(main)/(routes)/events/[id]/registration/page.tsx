@@ -2,9 +2,26 @@
 
 import { MemberSearchForm } from "@/components/member-search-form"
 import { Button } from "@/components/ui/button"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { makeRequest } from "@/lib/axios"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Event, User } from "@prisma/client"
+import { Event, Field, User } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
 import { X } from "lucide-react"
 import { useSession } from "next-auth/react"
@@ -19,6 +36,11 @@ type ApiResponse<T> = {
   [key: string]: T
 }
 
+type SelectOption = {
+  label: string
+  value: string
+}
+
 const schema = y.object({
   participants: y.array(
     y.object({
@@ -27,6 +49,12 @@ const schema = y.object({
     })
   ),
   eventId: y.string(),
+  fields: y.array(
+    y.object({
+      name: y.string(),
+      value: y.string(),
+    })
+  ),
 })
 
 export default function RegistrationPage() {
@@ -69,13 +97,23 @@ export default function RegistrationPage() {
 
   const onSubmit = form.handleSubmit((data) => {})
 
-  const eventQuery = useQuery<ApiResponse<Event>>({
+  const eventQuery = useQuery<
+    ApiResponse<
+      Event & {
+        eventFields: Array<{
+          field: Field
+        }>
+      }
+    >
+  >({
     queryKey: ["@EVENT", params.id],
     async queryFn() {
-      const res = await makeRequest.get("/events/" + params.id)
+      const res = await makeRequest.get(`/events/${params.id}`)
       return res.data
     },
   })
+
+  console.log(eventQuery.data?.event.eventFields[0].field)
 
   return (
     eventQuery.data && (
@@ -110,6 +148,74 @@ export default function RegistrationPage() {
                 </Button>
               ))}
             </div>
+            <Form {...form}>
+              <form className="space-y-4">
+                {eventQuery.data.event.eventFields.map((customField, index) => {
+                  if (customField.field.type === "SELECT") {
+                    return (
+                      <FormField
+                        key={customField.field.id}
+                        control={form.control}
+                        name={`fields.${index}.value`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{customField.field.name}</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue
+                                    placeholder={customField.field.placeholder}
+                                  />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {customField.field.options.map(
+                                  // @ts-ignore
+                                  (option: SelectOption) => (
+                                    <SelectItem
+                                      key={option.value}
+                                      value={option.value}>
+                                      {option.label}
+                                    </SelectItem>
+                                  )
+                                )}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )
+                  } else
+                    return (
+                      <FormField
+                        key={customField.field.id}
+                        control={form.control}
+                        name={`fields.${index}.value`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{customField.field.name}</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder={
+                                  customField.field.placeholder ?? ""
+                                }
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormDescription>
+                              This is your public display name.
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )
+                })}
+              </form>
+            </Form>
           </div>
         </div>
       </main>
