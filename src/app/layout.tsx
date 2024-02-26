@@ -7,6 +7,7 @@ import { NextAuthProvider } from "@/providers/next-auth"
 import { NextNProgressProvider } from "@/providers/next-nprogress-bar"
 import { TanstackQueryProvider } from "@/providers/tanstack-query"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata = siteConfig.metadata
 
@@ -23,6 +24,7 @@ export default function RootLayout({
             <NextAuthProvider>
               {children}
               <SpeedInsights />
+              <Analytics />
               <Toaster position="top-right" richColors />
             </NextAuthProvider>
           </TanstackQueryProvider>
