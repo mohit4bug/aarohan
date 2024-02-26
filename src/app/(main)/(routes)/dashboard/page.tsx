@@ -2,13 +2,10 @@
 
 import { RegistrationCard } from "@/components/registration-card"
 import { makeRequest } from "@/lib/axios"
+import { ApiResponse } from "@/types/axios"
 import { Event, Registration } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
-
-type ApiResponse<T> = {
-  [key: string]: T
-}
 
 export default function DashboardPage() {
   const { data: session } = useSession()
@@ -35,8 +32,6 @@ export default function DashboardPage() {
       return res.data
     },
   })
-
-  console.log(registrationsQuery.data)
 
   return (
     <main className="h-full px-4 xl:px-0">

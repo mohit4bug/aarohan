@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { makeRequest } from "@/lib/axios"
+import { ApiError, ApiResponse } from "@/types/axios"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Event, Field, Registration, User } from "@prisma/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -33,14 +34,6 @@ import { useEffect, useState } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as y from "yup"
-
-type ApiResponse<T> = {
-  [key: string]: T
-}
-
-type ApiError = {
-  error: string
-}
 
 type SelectOption = {
   label: string

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { makeRequest } from "@/lib/axios"
+import { ApiError } from "@/types/axios"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Event } from "@prisma/client"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -17,14 +18,6 @@ import { Loader2Icon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as y from "yup"
-
-type ApiResponse<T> = {
-  [key: string]: T
-}
-
-type ApiError = {
-  error: string
-}
 
 const schema = y.object({
   fieldId: y.string().required("Field Id is required"),
