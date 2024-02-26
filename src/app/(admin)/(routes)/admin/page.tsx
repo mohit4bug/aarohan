@@ -4,15 +4,11 @@ import { AdminEventCard } from "@/components/admin-event-card"
 import { FieldCard } from "@/components/field-card"
 import { Button } from "@/components/ui/button"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Skeleton } from "@/components/ui/skeleton"
 import { makeRequest } from "@/lib/axios"
 import { Event, Field } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
-import {
-  CheckIcon,
-  CopyIcon,
-  ListIcon,
-  TextCursorInputIcon,
-} from "lucide-react"
+import { CheckIcon, CopyIcon } from "lucide-react"
 import { useState } from "react"
 
 type ApiResponse<T> = {
@@ -53,15 +49,21 @@ export default function AdminPage() {
     }, 2000)
   }
 
+  const skeletons = Array.from({ length: 6 }, (_, i) => i)
+
   return (
     <main className="h-full px-4 xl:px-0">
       <div className="max-w-6xl mx-auto py-4 xl:py-6 gap-4 space-y-8">
         <div className="space-y-4">
           <h3 className="text-2xl font-semibold tracking-tight">Fields</h3>
-          {fieldsQuery.data && (
-            <ScrollArea className="whitespace-nowrap w-full bg-card">
-              <div className="flex w-max space-x-4">
-                {fieldsQuery.data.fields.map((field, index) => (
+          <ScrollArea className="whitespace-nowrap w-full bg-card">
+            <div className="flex w-max space-x-4">
+              {fieldsQuery.isLoading &&
+                skeletons.map((_, idx) => (
+                  <Skeleton key={idx} className="w-40 h-10" />
+                ))}
+              {fieldsQuery.data &&
+                fieldsQuery.data.fields.map((field, index) => (
                   <div key={field.id} className="flex items-center gap-x-2">
                     <FieldCard {...field} />
                     <Button
@@ -76,23 +78,25 @@ export default function AdminPage() {
                     </Button>
                   </div>
                 ))}
-              </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          )}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </div>
         <div className="space-y-4">
           <h3 className="text-2xl font-semibold tracking-tight">Events</h3>
-          {eventsQuery.data && (
-            <ScrollArea className="whitespace-nowrap w-full">
-              <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {eventsQuery.data.events.map((event) => (
+          <ScrollArea className="whitespace-nowrap w-full">
+            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {eventsQuery.isLoading &&
+                skeletons.map((_, idx) => (
+                  <Skeleton key={idx} className="h-72" />
+                ))}
+              {eventsQuery.data &&
+                eventsQuery.data.events.map((event) => (
                   <AdminEventCard key={event.id} {...event} />
                 ))}
-              </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          )}
+            </div>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
         </div>
       </div>
     </main>
