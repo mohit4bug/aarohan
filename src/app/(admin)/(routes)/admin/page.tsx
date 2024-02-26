@@ -8,7 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { makeRequest } from "@/lib/axios"
 import { Event, Field } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
-import { CheckIcon, CopyIcon } from "lucide-react"
+import { CheckIcon, CopyIcon, PlusIcon } from "lucide-react"
 import { useState } from "react"
 
 type ApiResponse<T> = {
@@ -55,7 +55,12 @@ export default function AdminPage() {
     <main className="h-full px-4 xl:px-0">
       <div className="max-w-6xl mx-auto py-4 xl:py-6 gap-4 space-y-8">
         <div className="space-y-4">
-          <h3 className="text-2xl font-semibold tracking-tight">Fields</h3>
+          <div className="flex items-center gap-x-4">
+            <Button size="mini" variant="secondary" className="rounded-sm">
+              <PlusIcon className="w-4 h-4" />
+            </Button>
+            <h3 className="text-2xl font-semibold tracking-tight">Fields</h3>
+          </div>
           <ScrollArea className="whitespace-nowrap w-full bg-card">
             <div className="flex w-max space-x-4">
               {fieldsQuery.isLoading &&
@@ -83,7 +88,12 @@ export default function AdminPage() {
           </ScrollArea>
         </div>
         <div className="space-y-4">
-          <h3 className="text-2xl font-semibold tracking-tight">Events</h3>
+          <div className="flex items-center gap-x-4">
+            <Button size="mini" variant="secondary" className="rounded-sm">
+              <PlusIcon className="w-4 h-4" />
+            </Button>
+            <h3 className="text-2xl font-semibold tracking-tight">Events</h3>
+          </div>
           <ScrollArea className="whitespace-nowrap w-full">
             <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {eventsQuery.isLoading &&
