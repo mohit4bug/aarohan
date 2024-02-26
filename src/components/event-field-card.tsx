@@ -51,7 +51,7 @@ export const EventFieldCard = ({ event, field }: EventFieldCardProps) => {
         }
         disabled={fieldUnlinkMutation.isPending}>
         {fieldUnlinkMutation.isPending ? (
-          <Loader2Icon className="w-4 h-5 animate-spin mr-2" />
+          <Loader2Icon className="w-4 h-5 animate-spin" />
         ) : (
           <X className="w-4 h-4" />
         )}
