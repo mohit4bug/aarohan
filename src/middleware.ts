@@ -2,6 +2,7 @@ import authConfig from "@/auth.config"
 import {
   API_AUTH_PREFIX,
   LOGIN_SUCCESS_REDIRECT,
+  adminRoutes,
   authRoutes,
   publicRoutes,
 } from "@/route.config"
@@ -13,8 +14,12 @@ export const { auth } = NextAuth(authConfig)
 export default auth(async (req) => {
   const { nextUrl } = req
 
-  const isLoggedIn = !!req.auth
+  const auth = req.auth
+
+  const isLoggedIn = !!auth
   const isApiAuthRoute = nextUrl.pathname.startsWith(API_AUTH_PREFIX)
+
+  const isAdminRoute = adminRoutes.includes(nextUrl.pathname)
   const isAuthRoute = authRoutes.includes(nextUrl.pathname)
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
 
@@ -25,6 +30,12 @@ export default auth(async (req) => {
 
   if (!isLoggedIn && !isPublicRoute)
     return NextResponse.redirect(new URL("/", nextUrl))
+
+  if (isLoggedIn && isAdminRoute) {
+    if (auth.user.role !== "ADMIN") {
+      return NextResponse.redirect(new URL("/events", nextUrl))
+    }
+  }
 
   return NextResponse.next()
 })
