@@ -1,3 +1,4 @@
+import { auth } from "@/auth"
 import { db } from "@/lib/prisma"
 
 export async function GET(
@@ -12,11 +13,16 @@ export async function GET(
   }
 ) {
   try {
-    /**
-     * Admin check
-     * Code
-     * */
+    const session = await auth()
 
+    if (session && session.user.role !== "ADMIN") {
+      return Response.json(
+        {
+          error: "Unauthorized!",
+        },
+        { status: 403 }
+      )
+    }
     const field = await db.eventField.findFirst({
       where: {
         eventId: params.eid,

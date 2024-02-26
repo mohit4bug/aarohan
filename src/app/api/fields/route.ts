@@ -5,14 +5,14 @@ export const GET = auth(async (req) => {
   try {
     const { user } = req.auth!
 
-    // if (user.role !== "ADMIN") {
-    //   return Response.json(
-    //     {
-    //       error: "Unauthorized!",
-    //     },
-    //     { status: 403 }
-    //   )
-    // }
+    if (user.role !== "ADMIN") {
+      return Response.json(
+        {
+          error: "Unauthorized!",
+        },
+        { status: 403 }
+      )
+    }
 
     const fields = await db.field.findMany()
 
