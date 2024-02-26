@@ -30,7 +30,7 @@ export const {
 
       if (!existingUser) return token
 
-      token.role = process.env.NODE_ENV === "development" ? "ADMIN" : "USER"
+      token.role = existingUser.role
       token.type = "INSIDER"
 
       if (!existingUser.email.endsWith(insiderPostfix)) token.type = "OUTSIDER"

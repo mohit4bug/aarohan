@@ -1,3 +1,4 @@
+import { auth as getSession } from "@/auth"
 import authConfig from "@/auth.config"
 import {
   API_AUTH_PREFIX,
@@ -14,9 +15,10 @@ export const { auth } = NextAuth(authConfig)
 export default auth(async (req) => {
   const { nextUrl } = req
 
-  const auth = req.auth
+  /* Using this to get user's Role */
+  const session = await getSession()
 
-  const isLoggedIn = !!auth
+  const isLoggedIn = !!req.auth
   const isApiAuthRoute = nextUrl.pathname.startsWith(API_AUTH_PREFIX)
 
   const isAdminRoute = adminRoutes.includes(nextUrl.pathname)
@@ -32,7 +34,7 @@ export default auth(async (req) => {
     return NextResponse.redirect(new URL("/", nextUrl))
 
   if (isLoggedIn && isAdminRoute) {
-    if (auth.user.role !== "ADMIN") {
+    if (session && session.user.role !== "ADMIN") {
       return NextResponse.redirect(new URL("/events", nextUrl))
     }
   }
