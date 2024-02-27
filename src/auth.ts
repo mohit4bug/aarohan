@@ -22,6 +22,23 @@ export const {
 } = NextAuth({
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
+  events: {
+    async linkAccount({ user }) {
+      const userType = user.email!.endsWith(insiderPostfix)
+        ? UserType.INSIDER
+        : UserType.OUTSIDER
+
+      await db.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          emailVerified: new Date(),
+          type: userType,
+        },
+      })
+    },
+  },
   callbacks: {
     async jwt({ token }) {
       if (!token.sub) return token
@@ -31,9 +48,9 @@ export const {
       if (!existingUser) return token
 
       token.role = existingUser.role
-      token.type = "INSIDER"
+      token.type = existingUser.type
 
-      if (!existingUser.email.endsWith(insiderPostfix)) token.type = "OUTSIDER"
+      // if (!existingUser.email.endsWith(insiderPostfix)) token.type = "OUTSIDER"
 
       return token
     },
