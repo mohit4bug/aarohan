@@ -52,6 +52,12 @@ export default function AdminPage() {
 
   const skeletons = Array.from({ length: 6 }, (_, i) => i)
 
+  const [open, setOpen] = useState(false)
+
+  const onClose = () => {
+    setOpen(false)
+  }
+
   return (
     <main className="h-full px-4 xl:px-0">
       <div className="max-w-6xl mx-auto py-4 xl:py-6 gap-4 space-y-8">

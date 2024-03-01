@@ -19,12 +19,47 @@ export const GET = auth(async (req) => {
     return Response.json(
       {
         fields,
-        message: "Registration successful!",
+        message: "Fields fetched successfully!",
       },
       { status: 201 }
     )
   } catch (error) {
-    console.error(error)
+    return Response.json(
+      {
+        error: "Something went wrong!",
+      },
+      { status: 500 }
+    )
+  }
+})
+
+export const POST = auth(async (req) => {
+  try {
+    const body = await req.json()
+
+    const { user } = req.auth!
+
+    if (user.role !== "ADMIN") {
+      return Response.json(
+        {
+          error: "Unauthorized!",
+        },
+        { status: 403 }
+      )
+    }
+
+    const field = await db.field.create({
+      data: body,
+    })
+
+    return Response.json(
+      {
+        field,
+        message: "Field created successfully!",
+      },
+      { status: 201 }
+    )
+  } catch (error) {
     return Response.json(
       {
         error: "Something went wrong!",

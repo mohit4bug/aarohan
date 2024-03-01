@@ -17,9 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { makeRequest } from "@/lib/axios"
+import { ApiError } from "@/types/axios"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { PlusIcon, X } from "lucide-react"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { AxiosError } from "axios"
+import { Loader2Icon, PlusIcon, X } from "lucide-react"
 import { useFieldArray, useForm } from "react-hook-form"
+import { toast } from "sonner"
 import * as y from "yup"
 
 const schema = y.object({
@@ -35,6 +40,8 @@ const schema = y.object({
   ),
 })
 
+interface FieldFormProps {}
+
 export const FieldForm = () => {
   const form = useForm({
     resolver: yupResolver(schema),
@@ -48,6 +55,25 @@ export const FieldForm = () => {
     name: "options",
   })
 
+  const queryClient = useQueryClient()
+
+  const createFieldMutation = useMutation({
+    mutationKey: ["@CREATE_FIELD"],
+    async mutationFn(values: y.InferType<typeof schema>) {
+      const res = await makeRequest.post("/fields", values)
+      return res.data
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: ["@FIELDS"],
+      })
+      toast.success("Field created successfully!")
+    },
+    onError(error: AxiosError<ApiError>) {
+      toast.error(error.response?.data.error)
+    },
+  })
+
   const onSubmit = form.handleSubmit((data) => {
     /* Select len check */
     if (options.fields.length <= 0 && data.type === "SELECT") {
@@ -56,6 +82,7 @@ export const FieldForm = () => {
         message: "Please add at least one option.",
       })
     }
+    createFieldMutation.mutate(data)
   })
 
   return (
@@ -186,7 +213,12 @@ export const FieldForm = () => {
             </Button>
           </div>
         )}
-        <Button className="col-span-2">Create Field</Button>
+        <Button className="col-span-2" disabled={createFieldMutation.isPending}>
+          {createFieldMutation.isPending && (
+            <Loader2Icon className="w-4 h-5 animate-spin mr-2" />
+          )}
+          Create Field
+        </Button>
       </form>
     </Form>
   )
