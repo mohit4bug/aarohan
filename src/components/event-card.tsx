@@ -21,12 +21,14 @@ export const EventCard = (props: Event) => {
           src={props.poster}
           alt={props.name}
           fill
-          className="h-full w-full object-cover z-[-1] brightness-50"
+          className="h-full w-full object-cover z-[-1] brightness-[30%]"
         />
         <div className="absolute inset-0 bg-gradient-to-r to-black from-transparent z-[-1]" />
         <CardHeader>
-          <CardTitle>{props.name}</CardTitle>
-          <CardDescription>{props.description}</CardDescription>
+          <CardTitle className="line-clamp-1">{props.name}</CardTitle>
+          <CardDescription className="line-clamp-3">
+            {props.description}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {props.isGroup ? <Badge>Team</Badge> : <Badge>Solo</Badge>}
