@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { PlusIcon } from "lucide-react"
+import { PlusIcon, X } from "lucide-react"
 import { useFieldArray, useForm } from "react-hook-form"
 import * as y from "yup"
 
@@ -57,10 +57,6 @@ export const FieldForm = () => {
       })
     }
   })
-
-  const onOptionAppend = () => {
-    options.append({} as any)
-  }
 
   return (
     <Form {...form}>
@@ -136,12 +132,12 @@ export const FieldForm = () => {
             <div className="space-y-4">
               <Label>Options</Label>
               {options.fields.map((field, index) => (
-                <div key={field.id} className="grid grid-cols-2 gap-4">
+                <div key={field.id} className="flex gap-x-4">
                   <FormField
                     control={form.control}
                     name={`options.${index}.label`}
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="flex-grow">
                         <FormControl>
                           <Input placeholder="Option label" {...field} />
                         </FormControl>
@@ -153,7 +149,7 @@ export const FieldForm = () => {
                     control={form.control}
                     name={`options.${index}.value`}
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="flex-grow">
                         <FormControl>
                           <Input placeholder="Option value" {...field} />
                         </FormControl>
@@ -161,6 +157,14 @@ export const FieldForm = () => {
                       </FormItem>
                     )}
                   />
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="outline"
+                    className="shrink-0"
+                    onClick={() => options.remove(index)}>
+                    <X className="w-4 h-4" />
+                  </Button>
                 </div>
               ))}
               <p className="text-sm font-medium text-destructive">
@@ -171,7 +175,12 @@ export const FieldForm = () => {
               type="button"
               variant="outline"
               className="w-full"
-              onClick={onOptionAppend}>
+              onClick={() =>
+                options.append({
+                  label: "",
+                  value: "",
+                })
+              }>
               <PlusIcon className="w-4 h-4 mr-2" />
               Add
             </Button>
