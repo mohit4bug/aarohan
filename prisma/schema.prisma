@@ -108,12 +108,12 @@ model Field {
 }
 
 model EventField {
-  id      String @id @default(uuid())
-  eventId String
-  fieldId String
+  id      String  @id @default(uuid())
+  eventId String?
+  fieldId String?
 
-  event Event @relation(fields: [eventId], references: [id])
-  field Field @relation(fields: [fieldId], references: [id])
+  event Event? @relation(fields: [eventId], references: [id])
+  field Field? @relation(fields: [fieldId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

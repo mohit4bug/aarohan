@@ -1,5 +1,6 @@
 "use client"
 
+import { FieldFormModal } from "@/app/(admin)/(routes)/admin/_components/field-form-modal"
 import { AdminEventCard } from "@/components/admin-event-card"
 import { FieldCard } from "@/components/field-card"
 import { Button } from "@/components/ui/button"
@@ -56,9 +57,11 @@ export default function AdminPage() {
       <div className="max-w-6xl mx-auto py-4 xl:py-6 gap-4 space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-x-4">
-            <Button size="mini" variant="secondary" className="rounded-sm">
-              <PlusIcon className="w-4 h-4" />
-            </Button>
+            <FieldFormModal>
+              <Button size="mini" variant="secondary" className="rounded-sm">
+                <PlusIcon className="w-4 h-4" />
+              </Button>
+            </FieldFormModal>
             <h3 className="text-2xl font-semibold tracking-tight">Fields</h3>
           </div>
           <ScrollArea className="whitespace-nowrap w-full bg-card">
