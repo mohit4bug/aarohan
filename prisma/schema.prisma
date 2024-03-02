@@ -63,6 +63,7 @@ model Event {
   categories      String[]
   poster          String
   venue           String
+  note            String?
 
   registrations Registration[]
   eventFields   EventField[]

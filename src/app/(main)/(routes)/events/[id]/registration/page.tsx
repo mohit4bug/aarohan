@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -198,13 +197,15 @@ export default function RegistrationPage() {
             <p className="text-xl text-muted-foreground">
               {eventQuery.data.event.description}
             </p>
-            <Alert variant="alert" className="bg-alert/10">
-              <AlertCircleIcon className="h-4 w-4" />
-              <AlertTitle>Note!</AlertTitle>
-              <AlertDescription>
-                This is a test note for the event.
-              </AlertDescription>
-            </Alert>
+            {eventQuery.data.event.note && (
+              <Alert variant="alert" className="bg-alert/10">
+                <AlertCircleIcon className="h-4 w-4" />
+                <AlertTitle>Note!</AlertTitle>
+                <AlertDescription>
+                  {eventQuery.data.event.note}
+                </AlertDescription>
+              </Alert>
+            )}
             <div className="w-full aspect-video relative overflow-hidden rounded-md">
               <Image
                 src={eventQuery.data.event.poster}
