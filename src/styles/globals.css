@@ -26,6 +26,8 @@ body {
     --accent-foreground: 240 5.9% 10%;
     --success: 127 55% 40%;
     --success-foreground: 0 0% 98%;
+    --alert: 40 80% 50%;
+    --alert-foreground: 0 0% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;

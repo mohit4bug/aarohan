@@ -26,7 +26,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { Event, Field, Registration, User } from "@prisma/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { AxiosError } from "axios"
-import { CheckCircleIcon, Loader2Icon, X } from "lucide-react"
+import { AlertCircleIcon, CheckCircleIcon, Loader2Icon, X } from "lucide-react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { useParams } from "next/navigation"
@@ -198,6 +198,13 @@ export default function RegistrationPage() {
             <p className="text-xl text-muted-foreground">
               {eventQuery.data.event.description}
             </p>
+            <Alert variant="alert" className="bg-alert/10">
+              <AlertCircleIcon className="h-4 w-4" />
+              <AlertTitle>Note!</AlertTitle>
+              <AlertDescription>
+                This is a test note for the event.
+              </AlertDescription>
+            </Alert>
             <div className="w-full aspect-video relative overflow-hidden rounded-md">
               <Image
                 src={eventQuery.data.event.poster}
