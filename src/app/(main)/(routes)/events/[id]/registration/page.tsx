@@ -62,6 +62,7 @@ export default function RegistrationPage() {
   const form = useForm({
     resolver: yupResolver(schema),
     defaultValues: {},
+    mode: "onChange",
   })
 
   useEffect(() => {
@@ -103,32 +104,6 @@ export default function RegistrationPage() {
         queryKey: ["@EVENT", params.id],
       })
     },
-  })
-
-  /* Handling submit */
-  const onSubmit = form.handleSubmit((data) => {
-    /* Participants check */
-    if (eventQuery.data) {
-      if (eventQuery.data.event.isGroup) {
-        if (
-          participants.fields.length < eventQuery.data.event.minParticipants
-        ) {
-          toast.error(
-            `Please add at least ${eventQuery.data.event.minParticipants} participants.`
-          )
-          return
-        }
-        if (
-          participants.fields.length > eventQuery.data.event.maxParticipants
-        ) {
-          toast.error(
-            `You can add at most ${eventQuery.data.event.maxParticipants} participants.`
-          )
-          return
-        }
-      }
-    }
-    registrationMutation.mutate(data)
   })
 
   /* Searching in child component */
@@ -173,6 +148,50 @@ export default function RegistrationPage() {
       setIsMounted(false)
     }
   }, [])
+
+  /* Handling submit */
+  const onSubmit = form.handleSubmit((data) => {
+    /* Validation check */
+    if (data.fields) {
+      data.fields.map((field, index) => {
+        const { name, value } = field
+        if (eventQuery.data) {
+          const regex = new RegExp(
+            eventQuery.data.event.eventFields?.[index].field.regex ?? /^.*$/
+          )
+          if (!regex.test(value)) {
+            form.setError(`fields.${index}.value`, {
+              type: "pattern",
+              message: "Invalid value",
+            })
+          }
+        }
+      })
+    }
+
+    /* Participants check */
+    if (eventQuery.data) {
+      if (eventQuery.data.event.isGroup) {
+        if (
+          participants.fields.length < eventQuery.data.event.minParticipants
+        ) {
+          toast.error(
+            `Please add at least ${eventQuery.data.event.minParticipants} participants.`
+          )
+          return
+        }
+        if (
+          participants.fields.length > eventQuery.data.event.maxParticipants
+        ) {
+          toast.error(
+            `You can add at most ${eventQuery.data.event.maxParticipants} participants.`
+          )
+          return
+        }
+      }
+    }
+    registrationMutation.mutate(data)
+  })
 
   return (
     isMounted &&

@@ -102,6 +102,7 @@ model Field {
   type        FieldType @default(TEXT)
   options     Json[]
   placeholder String?
+  regex       String?
 
   EventFields EventField[]
 

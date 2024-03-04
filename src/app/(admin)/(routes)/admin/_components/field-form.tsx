@@ -31,6 +31,7 @@ const schema = y.object({
   name: y.string().required("Name is required"),
   value: y.string().required("Value is required"),
   placeholder: y.string(),
+  regex: y.string(),
   type: y.string().required("Type is required"),
   options: y.array(
     y.object({
@@ -40,9 +41,11 @@ const schema = y.object({
   ),
 })
 
-interface FieldFormProps {}
+interface FieldFormProps {
+  onSuccess?: () => void
+}
 
-export const FieldForm = () => {
+export const FieldForm = (props: FieldFormProps) => {
   const form = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -68,6 +71,7 @@ export const FieldForm = () => {
         queryKey: ["@FIELDS"],
       })
       toast.success("Field created successfully!")
+      props.onSuccess && props.onSuccess()
     },
     onError(error: AxiosError<ApiError>) {
       toast.error(error.response?.data.error)
@@ -120,6 +124,22 @@ export const FieldForm = () => {
         />
         <FormField
           control={form.control}
+          name="regex"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Regex</FormLabel>
+              <FormControl>
+                <Input placeholder="Field regex" {...field} />
+              </FormControl>
+              <FormDescription>
+                Share the regex you want to validate with.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="placeholder"
           render={({ field }) => (
             <FormItem>
@@ -131,6 +151,7 @@ export const FieldForm = () => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="type"
@@ -156,7 +177,7 @@ export const FieldForm = () => {
         />
         {form.watch("type") === "SELECT" && (
           <div className="space-y-4">
-            <div className="space-y-4">
+            <div className="flex flex-col gap-y-4">
               <Label>Options</Label>
               {options.fields.map((field, index) => (
                 <div key={field.id} className="flex gap-x-4">
@@ -194,9 +215,11 @@ export const FieldForm = () => {
                   </Button>
                 </div>
               ))}
-              <p className="text-sm font-medium text-destructive">
-                {form.formState.errors.options?.message}
-              </p>
+              {form.formState.errors.options?.message && (
+                <p className="text-sm font-medium text-destructive">
+                  {form.formState.errors.options?.message}
+                </p>
+              )}
             </div>
             <Button
               type="button"

@@ -58,16 +58,22 @@ export default function AdminPage() {
     setOpen(false)
   }
 
+  const onOpen = () => {
+    setOpen(true)
+  }
+
   return (
     <main className="h-full px-4 xl:px-0">
       <div className="max-w-6xl mx-auto py-4 xl:py-6 gap-4 space-y-8">
         <div className="space-y-4">
           <div className="flex items-center gap-x-4">
-            <FieldFormModal>
-              <Button size="mini" variant="secondary" className="rounded-sm">
-                <PlusIcon className="w-4 h-4" />
-              </Button>
-            </FieldFormModal>
+            <Button
+              size="mini"
+              variant="secondary"
+              className="rounded-sm"
+              onClick={onOpen}>
+              <PlusIcon className="w-4 h-4" />
+            </Button>
             <h3 className="text-2xl font-semibold tracking-tight">Fields</h3>
           </div>
           <ScrollArea className="whitespace-nowrap w-full bg-card">
@@ -118,6 +124,7 @@ export default function AdminPage() {
           </ScrollArea>
         </div>
       </div>
+      <FieldFormModal open={open} onClose={onClose} />
     </main>
   )
 }
