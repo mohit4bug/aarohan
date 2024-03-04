@@ -153,8 +153,8 @@ export default function RegistrationPage() {
   const onSubmit = form.handleSubmit((data) => {
     /* Validation check */
     if (data.fields) {
-      data.fields.map((field, index) => {
-        const { name, value } = field
+      for (let index = 0; index < data.fields.length; index++) {
+        const { value } = data.fields[index]
         if (eventQuery.data) {
           const regex = new RegExp(
             eventQuery.data.event.eventFields?.[index].field.regex ?? /^.*$/
@@ -164,32 +164,31 @@ export default function RegistrationPage() {
               type: "pattern",
               message: "Invalid value",
             })
+            return // Validation failed
           }
         }
-      })
+      }
     }
 
     /* Participants check */
     if (eventQuery.data) {
       if (eventQuery.data.event.isGroup) {
-        if (
-          participants.fields.length < eventQuery.data.event.minParticipants
-        ) {
-          toast.error(
-            `Please add at least ${eventQuery.data.event.minParticipants} participants.`
-          )
-          return
+        const { minParticipants, maxParticipants } = eventQuery.data.event
+        const numParticipants = participants.fields.length
+
+        if (numParticipants < minParticipants) {
+          toast.error(`Please add at least ${minParticipants} participants.`)
+          return // Validation failed
         }
-        if (
-          participants.fields.length > eventQuery.data.event.maxParticipants
-        ) {
-          toast.error(
-            `You can add at most ${eventQuery.data.event.maxParticipants} participants.`
-          )
-          return
+
+        if (numParticipants > maxParticipants) {
+          toast.error(`You can add at most ${maxParticipants} participants.`)
+          return // Validation failed
         }
       }
     }
+
+    // Proceed with the mutation
     registrationMutation.mutate(data)
   })
 
