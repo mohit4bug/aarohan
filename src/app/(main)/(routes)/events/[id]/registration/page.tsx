@@ -29,6 +29,7 @@ import { AlertCircleIcon, CheckCircleIcon, Loader2Icon, X } from "lucide-react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { useParams } from "next/navigation"
+import party from "party-js"
 import { useEffect, useState } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -89,6 +90,7 @@ export default function RegistrationPage() {
       return res.data
     },
     onSuccess(data) {
+      party.confetti(document.body)
       toast.success(data.message)
       form.reset({
         eventId: String(),
