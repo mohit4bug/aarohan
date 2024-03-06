@@ -84,6 +84,8 @@ model Registration {
 
   participants User[] @relation("PARTICIPANT_REGISTRATIONS")
 
+  details Json?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -6,6 +6,8 @@ export const POST = auth(async (req) => {
     const { user } = req.auth!
     const body = await req.json()
 
+    console.log(body)
+
     const eventId = body.eventId
     const participants = body.participants
 
@@ -63,6 +65,7 @@ export const POST = auth(async (req) => {
       data: {
         bossId: user.id!,
         eventId: eventId,
+        details: body.fields,
         participants: {
           connect: modifiedParticipants,
         },

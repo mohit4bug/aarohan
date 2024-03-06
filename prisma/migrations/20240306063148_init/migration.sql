@@ -51,6 +51,8 @@ CREATE TABLE "Event" (
     "reward" DOUBLE PRECISION NOT NULL,
     "categories" TEXT[],
     "poster" TEXT NOT NULL,
+    "venue" TEXT NOT NULL,
+    "note" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -63,6 +65,7 @@ CREATE TABLE "Registration" (
     "bossId" TEXT NOT NULL,
     "eventId" TEXT NOT NULL,
     "hasPaid" BOOLEAN NOT NULL DEFAULT false,
+    "details" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -77,6 +80,7 @@ CREATE TABLE "Field" (
     "type" "FieldType" NOT NULL DEFAULT 'TEXT',
     "options" JSONB[],
     "placeholder" TEXT,
+    "regex" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -86,8 +90,10 @@ CREATE TABLE "Field" (
 -- CreateTable
 CREATE TABLE "EventField" (
     "id" TEXT NOT NULL,
-    "eventId" TEXT NOT NULL,
-    "fieldId" TEXT NOT NULL,
+    "eventId" TEXT,
+    "fieldId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "EventField_pkey" PRIMARY KEY ("id")
 );
@@ -105,6 +111,12 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Registration_bossId_eventId_key" ON "Registration"("bossId", "eventId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "EventField_eventId_fieldId_key" ON "EventField"("eventId", "fieldId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_PARTICIPANT_REGISTRATIONS_AB_unique" ON "_PARTICIPANT_REGISTRATIONS"("A", "B");
 
 -- CreateIndex
@@ -120,10 +132,10 @@ ALTER TABLE "Registration" ADD CONSTRAINT "Registration_bossId_fkey" FOREIGN KEY
 ALTER TABLE "Registration" ADD CONSTRAINT "Registration_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "EventField" ADD CONSTRAINT "EventField_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "EventField" ADD CONSTRAINT "EventField_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "Event"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "EventField" ADD CONSTRAINT "EventField_fieldId_fkey" FOREIGN KEY ("fieldId") REFERENCES "Field"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "EventField" ADD CONSTRAINT "EventField_fieldId_fkey" FOREIGN KEY ("fieldId") REFERENCES "Field"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_PARTICIPANT_REGISTRATIONS" ADD CONSTRAINT "_PARTICIPANT_REGISTRATIONS_A_fkey" FOREIGN KEY ("A") REFERENCES "Registration"("id") ON DELETE CASCADE ON UPDATE CASCADE;
