@@ -37,6 +37,16 @@ export const POST = auth(async (req) => {
       )
     }
 
+    // TODO: Test this
+    if (!event.allowOutside && user.type === "OUTSIDER") {
+      return Response.json(
+        {
+          error: "You are not allowed to register for this event!",
+        },
+        { status: 403 }
+      )
+    }
+
     /* Group & participans check */
     if (event.isGroup) {
       if (

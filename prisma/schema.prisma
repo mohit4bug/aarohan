@@ -64,6 +64,7 @@ model Event {
   poster          String
   venue           String
   note            String?
+  allowOutside    Boolean  @default(false)
 
   registrations Registration[]
   eventFields   EventField[]
