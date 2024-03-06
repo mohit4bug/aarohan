@@ -6,12 +6,10 @@ export async function GET(request: Request) {
   try {
     const session = await auth()
     const { user } = session!
+    const allowOutside = user.type !== "INSIDER"
 
-    /* TODO: Test this */
     const events = await db.event.findMany({
-      where: {
-        allowOutside: user.type === "OUTSIDER",
-      },
+      where: allowOutside ? { allowOutside: true } : {},
     })
 
     revalidatePath(request.url)

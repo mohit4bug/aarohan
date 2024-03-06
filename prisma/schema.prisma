@@ -62,6 +62,7 @@ model Event {
   reward          Float
   categories      String[]
   poster          String
+  banner          String?
   venue           String
   note            String?
   allowOutside    Boolean  @default(false)
