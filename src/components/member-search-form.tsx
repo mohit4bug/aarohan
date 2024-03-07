@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -68,14 +69,17 @@ export const MemberSearchForm = (props: MemberSearchFormProps) => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Search</FormLabel>
+              <FormLabel>Search email</FormLabel>
               <FormControl>
                 <Input
                   autoComplete="off"
-                  placeholder="example@gmail.com"
+                  placeholder="friend@example.com"
                   {...field}
                 />
               </FormControl>
+              <FormDescription>
+                Search for a member by email address
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

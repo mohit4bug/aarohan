@@ -10,8 +10,13 @@ import {
 import { FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { Event, Registration } from "@prisma/client"
-import { CheckIcon, CopyIcon } from "lucide-react"
+import { CheckIcon, CopyIcon, IndianRupeeIcon, InfoIcon } from "lucide-react"
 import { useState } from "react"
 
 export const RegistrationCard = (
@@ -30,11 +35,36 @@ export const RegistrationCard = (
     }, 2000)
   }
 
+  const registrationId = "```" + props.id + "```"
+
+  const message = encodeURIComponent(
+    `Hi, I've registered for Aarohan. Could you please share the payment QR Code for confirmation? My Registration ID is ${registrationId}. Thanks!`
+  )
+
+  const onCheckout = () => {
+    window.open(
+      `https://api.whatsapp.com/send?phone=+918696655651&text=${message}`
+    )
+  }
+
   return (
-    <Card>
+    <Card className="relative">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <InfoIcon className="w-4 h-4 absolute top-4 right-4 cursor-pointer text-muted-foreground hover:text-foreground transition-colors" />
+        </TooltipTrigger>
+        <TooltipContent>
+          <p className="text-sm text-muted-foreground max-w-sm">
+            Tap checkout, smoothly transition to WhatsApp for secure payment and
+            confirmation. 💵💬
+          </p>
+        </TooltipContent>
+      </Tooltip>
       <CardHeader>
         <CardTitle>{props.event.name}</CardTitle>
-        <CardDescription>{props.event.description}</CardDescription>
+        <CardDescription className="line-clamp-3">
+          {props.event.description}
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <FormItem>
@@ -67,6 +97,10 @@ export const RegistrationCard = (
             <Badge variant="secondary">Unconfirmed</Badge>
           )}
         </div>
+        <Button className="w-full" onClick={onCheckout}>
+          Checkout
+          <IndianRupeeIcon className="w-4 h-4 ml-2" />
+        </Button>
       </CardContent>
     </Card>
   )

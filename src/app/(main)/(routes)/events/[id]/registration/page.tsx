@@ -19,13 +19,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { makeRequest } from "@/lib/axios"
 import { ApiError, ApiResponse } from "@/types/axios"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Event, Field, Registration, User } from "@prisma/client"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { AxiosError } from "axios"
-import { AlertCircleIcon, CheckCircleIcon, Loader2Icon, X } from "lucide-react"
+import {
+  AlertCircleIcon,
+  BadgeIndianRupeeIcon,
+  CheckCircleIcon,
+  Loader2Icon,
+  TrophyIcon,
+  X,
+} from "lucide-react"
 import { useSession } from "next-auth/react"
 import Image from "next/image"
 import { useParams } from "next/navigation"
@@ -204,19 +220,20 @@ export default function RegistrationPage() {
               <CheckCircleIcon className="h-4 w-4" />
               <AlertTitle>Woah!</AlertTitle>
               <AlertDescription>
-                Looks like you are already registered for this event.
+                Looks like you are registered for this event.
               </AlertDescription>
             </Alert>
           </div>
         )}
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row py-4 xl:py-6 gap-4">
           <div className="flex-[1] space-y-4">
-            <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
+            <h1 className="text-3xl font-extrabold tracking-tight lg:text-4xl">
               {eventQuery.data.event.name}
             </h1>
-            <p className="text-xl text-muted-foreground">
+            <p className="text-base text-muted-foreground">
               {eventQuery.data.event.description}
             </p>
+
             {eventQuery.data.event.note && (
               <Alert variant="alert" className="bg-alert/10">
                 <AlertCircleIcon className="h-4 w-4" />
@@ -234,6 +251,33 @@ export default function RegistrationPage() {
                 layout="fill"
               />
             </div>
+            <Table>
+              <TableCaption>
+                Carefully review the details prior to registering 😊
+              </TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>
+                    Amount
+                    <BadgeIndianRupeeIcon className="h-4 w-4 ml-2 inline-block" />
+                  </TableHead>
+                  <TableHead>
+                    Reward
+                    <TrophyIcon className="h-4 w-4 ml-2 inline-block" />
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium">
+                    ₹ {eventQuery.data.event.amount}
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    ₹ {eventQuery.data.event.reward}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
           <div className="flex-[1] space-y-4">
             {eventQuery.data.event.isGroup && (
