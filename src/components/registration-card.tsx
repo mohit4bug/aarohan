@@ -54,10 +54,14 @@ export const RegistrationCard = (
           <InfoIcon className="w-4 h-4 absolute top-4 right-4 cursor-pointer text-muted-foreground hover:text-foreground transition-colors" />
         </TooltipTrigger>
         <TooltipContent>
-          <p className="text-sm text-muted-foreground max-w-sm">
-            Tap checkout, smoothly transition to WhatsApp for secure payment and
-            confirmation. 💵💬
-          </p>
+          {props.hasPaid ? (
+            <p>You&apos;ve already paid for this event. 🎉</p>
+          ) : (
+            <p className="text-sm text-muted-foreground max-w-sm">
+              Tap checkout, smoothly transition to WhatsApp for secure payment
+              and confirmation. 💵💬
+            </p>
+          )}
         </TooltipContent>
       </Tooltip>
       <CardHeader>
@@ -97,7 +101,10 @@ export const RegistrationCard = (
             <Badge variant="secondary">Unconfirmed</Badge>
           )}
         </div>
-        <Button className="w-full" onClick={onCheckout}>
+        <Button
+          className="w-full"
+          onClick={onCheckout}
+          disabled={props.hasPaid}>
           Checkout
           <IndianRupeeIcon className="w-4 h-4 ml-2" />
         </Button>
